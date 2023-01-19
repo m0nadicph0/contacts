@@ -7,6 +7,7 @@ class ContactsViewHolder(binding: ItemsRowBinding): RecyclerView.ViewHolder(bind
     val llMain = binding.llMain
     val tvName = binding.tvName
     val tvEmail = binding.tvEmail
+    val tvPhone = binding.tvPhone
     val ivEdit = binding.ivEdit
     val ivDelete = binding.ivDelete
 }

@@ -25,6 +25,7 @@ class ContactsAdapter(
         val contact = contacts[position]
         holder.tvName.text = contact.name
         holder.tvEmail.text = contact.email
+        holder.tvPhone.text = contact.phone
 
         holder.ivEdit.setOnClickListener {
             updateListener(contact.id)
