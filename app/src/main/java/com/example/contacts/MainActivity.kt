@@ -63,8 +63,51 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateRecordDialog(updateId: Int, contactsDao: ContactDao) {
-        TODO("Not yet implemented")
+    private fun updateRecordDialog(id: Int, contactsDao: ContactDao) {
+        val updateDialog = Dialog(this)
+        updateDialog.setCancelable(false)
+        updateDialog.setContentView(R.layout.add_contact_dialog)
+        val etName  = updateDialog.findViewById<EditText>(R.id.etName)
+        val etEmail = updateDialog.findViewById<EditText>(R.id.etEmail)
+        val etPhone = updateDialog.findViewById<EditText>(R.id.etPhone)
+        val btnAdd = updateDialog.findViewById<Button>(R.id.btAdd)
+        val btnCancel = updateDialog.findViewById<Button>(R.id.btCancel)
+
+        lifecycleScope.launch {
+            contactsDao.fetchById(id).collect {
+                if (it != null) {
+                    etName.setText(it.name)
+                    etEmail.setText(it.email)
+                    etPhone.setText(it.phone)
+                }
+            }
+        }
+        btnAdd.setOnClickListener {
+
+            val name = etName.text.toString()
+            val email = etEmail.text.toString()
+            val phone = etPhone.text.toString()
+
+            if (name.isNotEmpty() && email.isNotEmpty()) {
+                lifecycleScope.launch {
+                    contactsDao.update(Contact(id, name, phone, email))
+                    Toast.makeText(applicationContext, "Record Updated.", Toast.LENGTH_LONG)
+                        .show()
+                    updateDialog.dismiss() // Dialog will be dismissed
+                }
+            } else {
+                Toast.makeText(
+                    applicationContext,
+                    "Name or Email cannot be blank",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+        btnCancel.setOnClickListener{
+            updateDialog.dismiss()
+        }
+        //Start the dialog and display it on screen.
+        updateDialog.show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
